@@ -1,0 +1,224 @@
+Score.cs
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.UI;
+using UnityEngine;
+
+public class Score : MonoBehaviour
+{
+    public Text finalscore;
+    public Text TimerText;
+    private float startTime;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        startTime = Time.time;
+        finalscore.text = TimerText.text;
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        float t = Time.time - startTime;
+        string sec = ((int)t).ToString();
+        TimerText.text = sec;    
+        
+    }
+
+    
+}
+
+
+Hexagon.cs
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Hexagon : MonoBehaviour
+{
+    public Rigidbody2D rb;
+    public float shrinkSpeed = 3f;
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        rb.rotation = Random.Range(0f, 360f);
+        transform.localScale = Vector3.one * 10f;
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        transform.localScale -= Vector3.one * shrinkSpeed * Time.deltaTime;
+
+        if (transform.localScale.x <= 0.5f)
+        {
+            Destroy(gameObject);
+        }
+
+    }
+}
+
+Gamemenu.cs
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class Gamemenu : MonoBehaviour
+{
+  
+
+    public void PlayGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+    }
+
+    public void EndGame()
+    {
+        Debug.Log("EndGame");
+        Application.Quit();
+    }
+public void Easy()
+    {
+        SceneManager.LoadScene(2);
+    }
+
+    public void Medium()
+    {
+        SceneManager.LoadScene(3);
+    }
+    public void Hard()
+    {
+        SceneManager.LoadScene(4);
+    }
+}
+
+Spawner.cs
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Spawner : MonoBehaviour
+{
+    public float spawnRate = 1f;
+    public GameObject hexagonPrefab;
+    private float nextTimeToSpawn = 0f;
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Time.time >= nextTimeToSpawn)
+        {
+            Instantiate(hexagonPrefab, Vector3.zero, Quaternion.identity);
+            nextTimeToSpawn = Time.time + 1f / spawnRate;
+        }
+    }
+}
+
+Player.cs
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class player : MonoBehaviour
+{
+    public float moveSpeed = 600f;
+    public Joystick joystick;
+    float movement = 0f;
+
+    // Update is called once per frame
+    void Update()
+    {
+        movement = joystick.Horizontal;
+
+    }
+    private void FixedUpdate()
+    {
+        transform.RotateAround(Vector3.zero, Vector3.forward, angle: movement * Time.fixedDeltaTime * - moveSpeed);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+}
+
+
+Speedup.cs
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class speedup : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        Time.timeScale = 0.2f;   
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        Time.timeScale += 0.001f;   
+    }
+}
+
+Rotator.cs
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Rotator : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        transform.Rotate(Vector3.forward, Time.deltaTime * 30f);  
+    }
+}
+
+
+ForwardScore.cs
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class Forwardscore : MonoBehaviour
+{
+    public Text score;
+    // Start is called before the first frame update
+    void Start()
+    {
+        score.text = PlayerPrefs.GetString("score");
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+
+    }
+}
+
